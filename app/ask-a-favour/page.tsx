@@ -2,6 +2,7 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 const BackIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24"
@@ -218,6 +219,54 @@ const DashboardAskAFavourPage1: NextPage = () => {
     }
   };
 
+  const [requestText, setRequestText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleSendRequest = async () => {
+    const text = requestText.trim();
+
+    if (!text) {
+      setMessage("Please enter what help you need.");
+      return;
+    }
+
+    setSending(true);
+    setMessage("");
+
+    try {
+      // This requires an authenticated Supabase user.
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) throw userError;
+
+      if (!user) {
+        setMessage("Please log in before submitting a request.");
+        return;
+      }
+
+      const { error } = await supabase
+        .from("favours")
+        .insert({
+          title: text,
+          requester_id: user.id,
+          // Add other required columns once you confirm the schema.
+        });
+
+      if (error) throw error;
+
+      setRequestText("");
+      setMessage("Your request has been submitted successfully.");
+    } catch (error) {
+      console.error("Failed to submit request:", error);
+      setMessage("Failed to submit your request. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#f7f9f6] text-[#0b1322] [font-family:Metropolis,ui-sans-serif,system-ui,sans-serif]">
       <div className="grid h-4 w-full grid-cols-4">
@@ -256,8 +305,9 @@ const DashboardAskAFavourPage1: NextPage = () => {
           </h2>
 
           <textarea
-            value={text}
-            onChange={(event) => setText(event.target.value)}
+            value={requestText}
+            onChange={(e) => setRequestText(e.target.value)}
+            maxLength={2000}
             className="min-h-[160px] w-full flex-1 resize-none rounded-[14px] border border-[#e6e4df] bg-[#f7f9f6] p-4 text-xl text-[#0b1322] outline-none [font-family:inherit] placeholder:text-[#777] focus:border-[#ccc9c7] md:text-2xl"
             placeholder="I need help with getting my medicine from the Almara Pharmacy..."
           />
@@ -300,13 +350,11 @@ const DashboardAskAFavourPage1: NextPage = () => {
 
             <button
               type="button"
-              onClick={() => {
-                stopRecording();
-                // Connect this to your request submission logic.
-              }}
-              className="cursor-pointer rounded-[14px] border-none bg-[#0b1322] py-5 text-2xl font-bold text-white hover:bg-[#1c2a44]"
+              onClick={handleSendRequest}
+              disabled={sending}
+              className="cursor-pointer rounded-[14px] border-none bg-[#0b1322] py-5 text-2xl font-bold text-white hover:bg-[#1c2a44] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Send Request
+              {sending ? "Sending..." : "Send Request"}
             </button>
           </div>
         </section>
