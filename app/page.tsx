@@ -88,7 +88,9 @@ const DashboardMainPageV2: NextPage = () => {
             </b>
           </Link>
 
-          <button className="flex min-h-[300px] cursor-pointer flex-col items-center justify-between rounded-[30px] border border-[#e6e4df] bg-white px-4 pb-8 pt-12 text-[#0b1322] hover:border-[#ccc9c7] hover:bg-[#e6e6e6]">
+          <Link
+            href="/security_and_safety"
+            className="flex min-h-[300px] cursor-pointer flex-col items-center justify-between rounded-[30px] border border-[#e6e4df] bg-white px-4 pb-8 pt-12 text-[#0b1322] hover:border-[#ccc9c7] hover:bg-[#e6e6e6]">
             <Image
               className="h-[183px] w-[191px] object-contain"
               width={191}
@@ -101,7 +103,7 @@ const DashboardMainPageV2: NextPage = () => {
               <br />
               Security
             </b>
-          </button>
+          </Link>
 
           <Link
             href="/weather"
