@@ -90,11 +90,8 @@ const DashboardMainPageV2: NextPage = () => {
 
           <Link
             href="/security_and_safety"
-<<<<<<< HEAD
            className="flex min-h-[300px] cursor-pointer flex-col items-center justify-between rounded-[30px] border border-[#e6e4df] bg-white px-4 pb-8 pt-12 text-[#0b1322] hover:border-[#ccc9c7] hover:bg-[#e6e6e6]">
-=======
-            className="flex min-h-[300px] cursor-pointer flex-col items-center justify-between rounded-[30px] border border-[#e6e4df] bg-white px-4 pb-8 pt-12 text-[#0b1322] hover:border-[#ccc9c7] hover:bg-[#e6e6e6]">
->>>>>>> 1872af2ac32607797cec562fed57e9530e64c2c6
+
             <Image
               className="h-[183px] w-[191px] object-contain"
               width={191}
